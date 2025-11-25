@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   pgcocha:
-    image: ghcr.io/davidcocha/cocha:1.0.5
+    image: ghcr.io/silvert05/cocha:1.0.5
     deploy:
       replicas: 1
       labels:
@@ -21,8 +21,6 @@ services:
     networks:
       - traefik-public
     environment:
-      # Opcional: Si quieres usar Claude AI con API key
-      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - FLASK_ENV=production
 
 networks:
