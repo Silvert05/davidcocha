@@ -4,7 +4,7 @@ from app import app
 
 @pytest.fixture
 def client():
-    """Crear cliente de prueb para Flask"""
+    """Crear cliente de prueba para Flask"""
     app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
