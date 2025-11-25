@@ -5,7 +5,7 @@ IMAGE_NAME=cocha
 IMAGE_VERSION=1.0.5
 STACK_NAME=doraemon
 # ⚠️ IMPORTANTE: Reemplaza con tu usuario de GitHub
-GITHUB_USER=Silvert05
+GITHUB_USER=silvert05
 
 # Construcción local de la imagen
 build:
