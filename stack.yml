@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  pgcocha:
+    image: deyvidimg:1.0.1
+    build: .
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pgcocha.entrypoints=http"
+        - "traefik.http.routers.pgcocha.rule=Host(`pgcocha.byronrm.com`)"
+        - "traefik.http.middlewares.pgcocha-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.pgcocha.middlewares=pgcocha-https-redirect"
+        - "traefik.http.routers.pgcocha-secure.entrypoints=https"
+        - "traefik.http.routers.pgcocha-secure.rule=Host(`pgcocha.byronrm.com`)"
+        - "traefik.http.routers.pgcocha-secure.tls=true"
+        - "traefik.http.routers.pgcocha-secure.tls.certresolver=http"
+        - "traefik.http.routers.pgcocha-secure.service=pgcocha"
+        - "traefik.http.services.pgcocha.loadbalancer.server.port=5000"
+        - "traefik.docker.network=traefik-public"
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
