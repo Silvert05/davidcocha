@@ -3,7 +3,7 @@ version: "3.8"
 services:
   pgcocha:
     # ⚠️ IMPORTANTE: Reemplaza "TU_USUARIO_GITHUB" con tu usuario real de GitHub
-    image: david/Silvert05/cocha:1.0.5
+    image: david/silvert05/cocha:1.0.5
     deploy:
       replicas: 1
       labels:
