@@ -102,7 +102,7 @@ def hello():
     </head>
     <body>
         <div class="container">
-            <h1>🚀 CI/CD Pipeline - Examen Final</h1>
+            <h1>🚀 CI/CD Pipeline - David Cocha</h1>
             <p class="subtitle">Proyecto automatizado con GitHub Actions + Docker Swarm</p>
             
             <div class="feature">
