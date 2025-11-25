@@ -2,8 +2,8 @@ version: "3.8"
 
 services:
   pgcocha:
-    image: deyvidimg:1.0.1
-    build: .
+    # ⚠️ IMPORTANTE: Reemplaza "TU_USUARIO_GITHUB" con tu usuario real de GitHub
+    image: david/Silvert05/cocha:1.0.5
     deploy:
       replicas: 1
       labels:
@@ -21,6 +21,10 @@ services:
         - "traefik.docker.network=traefik-public"
     networks:
       - traefik-public
+    environment:
+      # Opcional: Si quieres usar Claude AI con API key
+      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - FLASK_ENV=production
 
 networks:
   traefik-public:

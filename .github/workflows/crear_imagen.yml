@@ -1,11 +1,8 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
 name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "david" ]
+    branches: [ "cocha" ]
 
 permissions:
   contents: read
@@ -13,17 +10,23 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+    
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: |
+        pip install -r requirements.txt
+        pip install pytest pytest-flask
+
+    - name: 🧪 Run tests
+      run: pytest tests/ -v
 
     - name: 🔐 Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -36,9 +39,9 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: ghcr.io/silvert05/cochadavid:latest
+        tags: ghcr.io/${{ github.repository_owner }}/cocha:1.0.5
       
-    - name: 🏗️ Pruebas de ssh con el servidor 
+    - name: 🔍 Test SSH connection
       uses: appleboy/ssh-action@v1
       with:
         host: ${{ secrets.VPS_HOST }}
@@ -46,13 +49,13 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
-            echo "conexion exitosa desde GITHUB Actions"
-            pwd
-            whoami
-            hostname
-            uptime
+          echo "✅ Conexión exitosa desde GitHub Actions"
+          pwd
+          whoami
+          hostname
+          uptime
 
-    - name: 🏗️ Pasar el stack.yml al servidor 
+    - name: 📤 Upload stack.yml to VPS
       uses: appleboy/scp-action@v1
       with:
         host: ${{ secrets.VPS_HOST }}
@@ -61,4 +64,17 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         source: "stack.yml"
         target: "/home/${{ secrets.VPS_USER }}/automatizar"
-           
+    
+    - name: 🚀 Deploy to VPS with Docker Stack
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        port: ${{ secrets.VPS_SSH_PORT }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        script: |
+          cd /home/${{ secrets.VPS_USER }}/automatizar
+          echo "🔄 Desplegando aplicación..."
+          docker stack deploy --with-registry-auth -c stack.yml doraemon
+          echo "✅ Despliegue completado"
+          docker service ls | grep doraemon
