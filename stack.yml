@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   pgcocha:
-    image: davidimg:1.0.1
+    image: deyvidimg:1.0.1
     build: .
     deploy:
       replicas: 1
