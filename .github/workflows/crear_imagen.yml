@@ -42,9 +42,9 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        # Usamos la variable de entorno que contiene el nombre del propietario en minúsculas
         tags: ghcr.io/${{ env.REPO_OWNER }}/cocha:1.0.5
 
+    # 💡 TEST DE SSH
     - name: 🔍 Test SSH connection
       uses: appleboy/ssh-action@v1
       with:
@@ -54,11 +54,11 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
           echo "✅ Conexión exitosa desde GitHub Actions"
-          pwd
           whoami
           hostname
           uptime
 
+    # 📂 Subir stack.yml
     - name: 📤 Upload stack.yml to VPS
       uses: appleboy/scp-action@v1
       with:
@@ -69,6 +69,7 @@ jobs:
         source: "stack.yml"
         target: "/home/${{ secrets.VPS_USER }}/automatizar"
 
+    # 🚀 Desplegar con Docker Stack
     - name: 🚀 Deploy to VPS with Docker Stack
       uses: appleboy/ssh-action@v1
       with:
