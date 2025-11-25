@@ -14,12 +14,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
-    
+
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
@@ -39,8 +39,9 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/cocha:1.0.5
-      
+        # Asegurarse de que la URL del repositorio esté en minúsculas
+        tags: ghcr.io/${{ github.repository_owner | toLowerCase }}/cocha:1.0.5
+
     - name: 🔍 Test SSH connection
       uses: appleboy/ssh-action@v1
       with:
@@ -64,7 +65,7 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         source: "stack.yml"
         target: "/home/${{ secrets.VPS_USER }}/automatizar"
-    
+
     - name: 🚀 Deploy to VPS with Docker Stack
       uses: appleboy/ssh-action@v1
       with:
